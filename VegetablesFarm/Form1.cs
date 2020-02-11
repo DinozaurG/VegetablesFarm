@@ -12,9 +12,15 @@ namespace VegetablesFarm
 {
     public partial class Form1 : Form
     {
+        Dictionary<CheckBox, Cell> field = new Dictionary<CheckBox, Cell>();
         public Form1()
         {
+            
             InitializeComponent();
+            foreach (CheckBox cb in panel1.Controls)
+            {
+                field.Add(cb, new Cell());
+            }
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -26,36 +32,46 @@ namespace VegetablesFarm
             }
             else
             {
-                CutGrow(cb);
+                Cut(cb);
             }
         }
         internal void StartGrow(CheckBox cb)
         {
-            cb.BackColor = Color.Black;
+            field[cb].StartGrow();
+            updateBox(cb);
         }
-        internal void CutGrow(CheckBox cb)
+        internal void Cut(CheckBox cb)
         {
-            cb.BackColor = Color.White;
+            field[cb].Cut();
+            updateBox(cb);
         }
         internal void nextState(CheckBox cb)
         {
+            field[cb].nextState();
+            updateBox(cb);
+        }
+        private void updateBox(CheckBox cb)
+        {
             Color c = Color.White;
-            if (cb.BackColor == Color.Black)
+            switch(field[cb].state)
             {
-                cb.BackColor = Color.Green;
+                case CellState.black:
+                    c = Color.Black;
+                    break;
+                case CellState.green:
+                    c = Color.Green;
+                    break;
+                case CellState.yellow:
+                    c = Color.Yellow;
+                    break;
+                case CellState.red:
+                    c = Color.Red;
+                    break;
+                case CellState.overgrown:
+                    c = Color.Brown;
+                    break;
             }
-            else if (cb.BackColor == Color.Green)
-            {
-                cb.BackColor = Color.Yellow;
-            }
-            else if (cb.BackColor == Color.Yellow)
-            {
-                cb.BackColor = Color.Red;
-            }
-            else if (cb.BackColor == Color.Red)
-            {
-                cb.BackColor = Color.Brown;
-            }
+            cb.BackColor = c;
         }
         private void timer_Tick(object sender, EventArgs e)
         {
