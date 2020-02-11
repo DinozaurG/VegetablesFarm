@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace VegetablesFarm
@@ -15,6 +10,8 @@ namespace VegetablesFarm
         Dictionary<CheckBox, Cell> field = new Dictionary<CheckBox, Cell>();
         Cash cash = new Cash();
         private double speed;
+        DateTime date;
+        Timer gameTime = new Timer();
         public Form1()
         {
             InitializeComponent();
@@ -23,18 +20,22 @@ namespace VegetablesFarm
                 field.Add(cb, new Cell());
             }
             label1.Text = ("Cash: " + cash.gold);
-            speed = timer.Interval / 100;
-            //label2.Text = ("Speed: " + speed + "x");
+            date = DateTime.Now;
+            gameTime.Interval = 1000;
+            gameTime.Tick += new EventHandler(tickTimer);
+            gameTime.Start();
+        }
+        private void tickTimer(object sender, EventArgs e)
+        {
+            long tick = DateTime.Now.Ticks - date.Ticks - timer.Interval;
+            DateTime stopWatch = new DateTime();
+            stopWatch = stopWatch.AddTicks(tick);
+            label2.Text = String.Format("{0:HH:mm:ss:ff}", stopWatch);
         }
         private void updateCash()
         {
             label1.Text = ("Cash: " + cash.gold);
         }
-        /*private void updateSpeed()
-        {
-            speed = ;
-            label2.Text = ("Speed: " + speed + "x");
-        }*/
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             CheckBox cb = sender as CheckBox;
@@ -99,18 +100,32 @@ namespace VegetablesFarm
         private void button1_Click(object sender, EventArgs e)
         {
             if (timer.Interval == 1)
+            {
                 timer.Interval += 99;
+                gameTime.Interval += 99;
+                gameTime.Start();
+            }
             else
+            {
                 timer.Interval += 100;
-            //updateSpeed();
+                gameTime.Interval += 100;
+                gameTime.Start();
+            }
         }
         private void button2_Click(object sender, EventArgs e)
         {
             if (timer.Interval == 100)
+            {
                 timer.Interval -= 99;
+                gameTime.Interval -= 99;
+                gameTime.Start();
+            }
             else if (timer.Interval > 100)
+            {
                 timer.Interval -= 100;
-            //updateSpeed();
+                gameTime.Interval -= 100;
+                gameTime.Start();
+            }
         }
     }
 }
