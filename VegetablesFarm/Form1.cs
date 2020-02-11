@@ -47,7 +47,7 @@ namespace VegetablesFarm
         }
         internal void nextState(CheckBox cb)
         {
-            field[cb].nextState();
+            field[cb].nextStep();
             updateBox(cb);
         }
         private void updateBox(CheckBox cb)
