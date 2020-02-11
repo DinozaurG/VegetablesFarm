@@ -13,26 +13,46 @@ namespace VegetablesFarm
     public partial class Form1 : Form
     {
         Dictionary<CheckBox, Cell> field = new Dictionary<CheckBox, Cell>();
+        Cash cash = new Cash();
+        private double speed;
         public Form1()
         {
-            
             InitializeComponent();
             foreach (CheckBox cb in panel1.Controls)
             {
                 field.Add(cb, new Cell());
             }
+            label1.Text = ("Cash: " + cash.gold);
+            speed = timer.Interval / 100;
+            //label2.Text = ("Speed: " + speed + "x");
         }
-
+        private void updateCash()
+        {
+            label1.Text = ("Cash: " + cash.gold);
+        }
+        /*private void updateSpeed()
+        {
+            speed = ;
+            label2.Text = ("Speed: " + speed + "x");
+        }*/
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             CheckBox cb = sender as CheckBox;
             if (cb.Checked)
             {
-                StartGrow(cb);
+                if (cash.updateCash(field[cb].getEarn()))
+                {
+                    StartGrow(cb);
+                    updateCash();
+                }
             }
             else
             {
-                Cut(cb);
+                if (cash.updateCash(field[cb].getEarn()))
+                {
+                    Cut(cb);
+                    updateCash();
+                }
             }
         }
         internal void StartGrow(CheckBox cb)
@@ -43,11 +63,6 @@ namespace VegetablesFarm
         internal void Cut(CheckBox cb)
         {
             field[cb].Cut();
-            updateBox(cb);
-        }
-        internal void nextState(CheckBox cb)
-        {
-            field[cb].nextStep();
             updateBox(cb);
         }
         private void updateBox(CheckBox cb)
@@ -77,8 +92,25 @@ namespace VegetablesFarm
         {
             foreach(CheckBox cb in panel1.Controls)
             {
-                nextState(cb);
+                field[cb].nextStep();
+                updateBox(cb);
             }
+        }
+        private void button1_Click(object sender, EventArgs e)
+        {
+            if (timer.Interval == 1)
+                timer.Interval += 99;
+            else
+                timer.Interval += 100;
+            //updateSpeed();
+        }
+        private void button2_Click(object sender, EventArgs e)
+        {
+            if (timer.Interval == 100)
+                timer.Interval -= 99;
+            else if (timer.Interval > 100)
+                timer.Interval -= 100;
+            //updateSpeed();
         }
     }
 }
