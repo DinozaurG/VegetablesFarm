@@ -9,7 +9,6 @@ namespace VegetablesFarm
     {
         Dictionary<CheckBox, Cell> field = new Dictionary<CheckBox, Cell>();
         Cash cash = new Cash();
-        private double speed;
         DateTime date;
         Timer gameTime = new Timer();
         public Form1()
@@ -20,6 +19,7 @@ namespace VegetablesFarm
                 field.Add(cb, new Cell());
             }
             label1.Text = ("Cash: " + cash.gold);
+            label4.Text = ("Speed: " + (double)(1000 / timer.Interval) + "x");
             date = DateTime.Now;
             gameTime.Interval = 1000;
             gameTime.Tick += new EventHandler(tickTimer);
@@ -36,6 +36,10 @@ namespace VegetablesFarm
         {
             label1.Text = ("Cash: " + cash.gold);
         }
+        private void updateSpeed()
+        {
+            label4.Text = ("Speed: " + (double)(1000 / timer.Interval) + "x");
+        }
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
             CheckBox cb = sender as CheckBox;
@@ -46,13 +50,20 @@ namespace VegetablesFarm
                     StartGrow(cb);
                     updateCash();
                 }
+                else
+                    MessageBox.Show("Нет денег");
             }
             else
             {
-                if (cash.updateCash(field[cb].getEarn()))
+                if (field[cb].state != CellState.empty)
                 {
-                    Cut(cb);
-                    updateCash();
+                    if (cash.updateCash(field[cb].getEarn()))
+                    {
+                        Cut(cb);
+                        updateCash();
+                    }
+                    else
+                        MessageBox.Show("Нет денег");
                 }
             }
         }
@@ -103,12 +114,14 @@ namespace VegetablesFarm
             {
                 timer.Interval += 99;
                 gameTime.Interval += 99;
+                updateSpeed();
                 gameTime.Start();
             }
             else
             {
                 timer.Interval += 100;
                 gameTime.Interval += 100;
+                updateSpeed();
                 gameTime.Start();
             }
         }
@@ -118,12 +131,14 @@ namespace VegetablesFarm
             {
                 timer.Interval -= 99;
                 gameTime.Interval -= 99;
+                updateSpeed();
                 gameTime.Start();
             }
             else if (timer.Interval > 100)
             {
                 timer.Interval -= 100;
                 gameTime.Interval -= 100;
+                updateSpeed();
                 gameTime.Start();
             }
         }

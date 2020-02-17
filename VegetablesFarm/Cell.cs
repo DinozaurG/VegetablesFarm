@@ -11,9 +11,9 @@
         const int earnForRed = 5;
         const int earnForBrown = -1;
         const int progForBlack = 20;
-        const int progForGreen = 100;
-        const int progForYellow = 150;
-        const int progForRed = 200;
+        const int progForGreen = 75;
+        const int progForYellow = 125;
+        const int progForRed = 175;
         public int getEarn()
         {
             int earnForBuy;
@@ -52,7 +52,11 @@
         public int Cut()
         {
             int earnForCut;
-            if (state == CellState.black)
+            if (state == CellState.empty)
+            {
+                earnForCut = 0;
+            }
+            else if (state == CellState.black)
             {
                 earnForCut = earnForBlack;
             }
