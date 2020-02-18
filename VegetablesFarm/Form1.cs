@@ -9,8 +9,7 @@ namespace VegetablesFarm
     {
         Dictionary<CheckBox, Cell> field = new Dictionary<CheckBox, Cell>();
         Cash cash = new Cash();
-        DateTime date;
-        Timer gameTime = new Timer();
+        int i = 0;
         public Form1()
         {
             InitializeComponent();
@@ -20,17 +19,6 @@ namespace VegetablesFarm
             }
             label1.Text = ("Cash: " + cash.gold);
             label4.Text = ("Speed: " + (double)(1000 / timer.Interval) + "x");
-            date = DateTime.Now;
-            gameTime.Interval = 1000;
-            gameTime.Tick += new EventHandler(tickTimer);
-            gameTime.Start();
-        }
-        private void tickTimer(object sender, EventArgs e)
-        {
-            long tick = DateTime.Now.Ticks - date.Ticks - timer.Interval;
-            DateTime stopWatch = new DateTime();
-            stopWatch = stopWatch.AddTicks(tick);
-            label2.Text = String.Format("{0:HH:mm:ss:ff}", stopWatch);
         }
         private void updateCash()
         {
@@ -107,40 +95,32 @@ namespace VegetablesFarm
                 field[cb].nextStep();
                 updateBox(cb);
             }
+            i++;
+            label3.Text = ("Day: " + i);
         }
         private void button1_Click(object sender, EventArgs e)
         {
             if (timer.Interval == 1)
             {
                 timer.Interval += 99;
-                gameTime.Interval += 99;
-                updateSpeed();
-                gameTime.Start();
             }
             else
             {
                 timer.Interval += 100;
-                gameTime.Interval += 100;
-                updateSpeed();
-                gameTime.Start();
             }
+            updateSpeed();
         }
         private void button2_Click(object sender, EventArgs e)
         {
             if (timer.Interval == 100)
             {
                 timer.Interval -= 99;
-                gameTime.Interval -= 99;
-                updateSpeed();
-                gameTime.Start();
             }
             else if (timer.Interval > 100)
             {
                 timer.Interval -= 100;
-                gameTime.Interval -= 100;
-                updateSpeed();
-                gameTime.Start();
             }
+            updateSpeed();
         }
     }
 }
